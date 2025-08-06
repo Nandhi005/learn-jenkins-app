@@ -14,8 +14,9 @@ pipeline {
                 sh '''
                 echo 'Hello, World!'
                 ls -la
-                mkdir -p ~/.npm
-                chown -R $(id -u):$(id -g) ~/.npm
+                echo "HOME is $HOME"
+                mkdir -p $HOME/.npm
+                chown -R $(id -u):$(id -g) $HOME/.npm
                 npm ci
                 npm run build
                 ls -la
