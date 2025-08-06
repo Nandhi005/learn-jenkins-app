@@ -14,7 +14,6 @@ pipeline {
                 sh '''
                 echo 'Hello, World!'
                 ls -la
-                npm --version
                 mkdir -p ~/.npm
                 chown -R $(id -u):$(id -g) ~/.npm
                 npm ci
