@@ -37,24 +37,22 @@ pipeline {
             }
         }
         stage('PlaywrightTest') {
-    agent {
+        agent {
         docker {
-            image 'mcr.microsoft.com/playwright:v1.39.0-noble'
+            image 'mcr.microsoft.com/playwright:v1.39.0'
             args '-u root:root'
             reuseNode true
         }
     }
     steps {
         sh '''
-        npm ci
         npx serve -s build &
         sleep 10
         npx playwright test
         '''
     }
 }
-
-    }
+}
     post {
         always {
             junit 'jest-results/junit.xml'
