@@ -70,7 +70,7 @@ pipeline {
                 npm install netlify-cli@latest -g
                 netlify --version
                 netlify status
-                netfily deploy --dir=build --prod
+                netlify deploy --dir=build --prod
                 '''
             }
         }
