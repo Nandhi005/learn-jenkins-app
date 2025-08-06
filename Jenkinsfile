@@ -67,7 +67,7 @@ pipeline {
             }
             steps {
                 sh '''
-                npm install netlify-cli
+                npm install netlify-cli --ignore-scripts
                 netlify --version
                 netlify status
                 netlify deploy --dir=build --prod
