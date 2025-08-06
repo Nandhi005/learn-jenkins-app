@@ -15,7 +15,8 @@ pipeline {
                 echo 'Hello, World!'
                 echo "User: $(whoami)"
                 echo "HOME is $HOME"
-                mkdir -p $HOME/.npm
+                mkdir -p /home/node/.npm
+
 
                 npm ci
                 npm run build
