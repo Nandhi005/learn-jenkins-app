@@ -15,7 +15,8 @@ pipeline {
                 echo 'Hello, World!'
                 ls -la
                 npm --version
-                mkdir -p /.npm && sudo chown -R $(id -u):$(id -g) /.npm
+                mkdir -p ~/.npm
+                chown -R $(id -u):$(id -g) ~/.npm
                 npm ci
                 npm run build
                 ls -la
