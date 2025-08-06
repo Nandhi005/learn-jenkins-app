@@ -29,9 +29,10 @@ pipeline {
             }
             steps {
                 sh '''
-                npm install serve
-                serve -s build
-                npx playwright test
+                echo "Test stage"
+                test -f build/index.html
+                npm test
+                ls -la
                 '''
             }
         }
@@ -45,14 +46,17 @@ pipeline {
             }
             steps {
                 sh '''
-
+                npm install serve
+                serve -s build &
+                sleep 10
+                npx playwright test
                 '''
             }
         }
     }
     post {
         always {
-            junit 'test-results/junit.xml'
+            junit 'jest-results/junit.xml'
         }
     }
 }
