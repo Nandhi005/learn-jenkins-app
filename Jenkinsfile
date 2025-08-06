@@ -6,17 +6,20 @@ pipeline {
             agent {
                 docker {
                     image 'node:18-alpine'
-                      // Use non-root user
+                    args '-u node -w /tmp'
                     reuseNode true
                 }
+            }
+            environment {
+                npm_config_cache = '/tmp/.npm'
             }
             steps {
                 sh '''
                 echo 'Hello, World!'
                 echo "User: $(whoami)"
                 echo "HOME is $HOME"
-                mkdir -p /home/node/.npm
 
+                mkdir -p $npm_config_cache
 
                 npm ci
                 npm run build
