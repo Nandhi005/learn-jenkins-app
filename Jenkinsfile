@@ -29,10 +29,23 @@ pipeline {
             }
             steps {
                 sh '''
-                echo "Test stage"
-                test -f build/index.html
-                npm test
-                ls -la
+                npm install serve
+                serve -s build
+                npx playwright test
+                '''
+            }
+        }
+        stage('PlaywrightTest') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.54.0-noble'
+                    args '-u root:root'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+
                 '''
             }
         }
