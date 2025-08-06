@@ -70,8 +70,8 @@ pipeline {
                 npm install netlify-cli --ignore-scripts
                 npx netlify --version 
                 npx netlify status
-                npx netlify link --id b060b76d-4b40-48d3-9940-07357592f5e3
-                npx netlify deploy --dir=build --prod
+                npx netlify deploy --auth=$NETLIFY_AUTH_TOKEN --site=b060b76d-4b40-48d3-9940-07357592f5e3 --dir=build --prod
+
                 '''
             }
         }
