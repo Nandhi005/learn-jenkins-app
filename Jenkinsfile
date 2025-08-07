@@ -24,6 +24,7 @@ pipeline {
                 '''
             }
         }
+        
         stage('Test') {
             agent {
                 docker {
@@ -67,13 +68,30 @@ pipeline {
             }
             steps {
                 sh '''
-                npm install netlify-cli --ignore-scripts
+                npm install -g netlify-cli@20.0.2
                 npx netlify --version 
                 npx netlify status
                 npx netlify deploy --dir=build --prod
                 '''
             }
         }
+//         stage('Prod PlaywrightTest') {
+//         agent {
+//         docker {
+//             image 'mcr.microsoft.com/playwright:v1.39.0'
+//             args '-u root:root'
+//             reuseNode true
+//         }
+//     }
+//     environment {
+//         CI_ENVIRONMENT_URL = ''
+//     }
+//     steps {
+//         sh '''
+//         npx playwright test
+//         '''
+//     }
+// }
 }
     post {
         always {
