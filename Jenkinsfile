@@ -46,6 +46,7 @@ pipeline {
                     junit 'jest-results/junit.xml'
                 }
         }
+        }
         stage('PlaywrightTest') {
         agent {
         docker {
