@@ -24,50 +24,69 @@ pipeline {
                 '''
             }
         }
-        
-        stage('Unit Test') {
-            agent {
+        stage('TEST') {
+            parallel{
+                 stage('Unit Test') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            args '-u root:root'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                        echo "Test stage"
+                        test -f build/index.html
+                        npm test
+                        ls -la
+                        '''
+                    }
+                    post {
+                        always {
+                            junit 'jest-results/junit.xml'
+                        }
+                }
+                }
+                stage('PlaywrightTest') {
+                agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'mcr.microsoft.com/playwright:v1.39.0'
                     args '-u root:root'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
-                echo "Test stage"
-                test -f build/index.html
-                npm test
-                ls -la
+                npx serve -s build &
+                sleep 10
+                npx playwright test
                 '''
             }
             post {
                 always {
-                    junit 'jest-results/junit.xml'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                 }
+            }
         }
+            }
         }
-        stage('PlaywrightTest') {
-        agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.39.0'
-            args '-u root:root'
-            reuseNode true
+        stage('Deploy Staging') {
+            agent {
+                docker {
+                    image 'node:18'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                npm install -g netlify-cli@20.0.2 node-jq
+                npx netlify --version 
+                npx netlify status
+                npx netlify deploy --dir=build --json > deploy.json 
+                '''
+            }
         }
-    }
-    steps {
-        sh '''
-        npx serve -s build &
-        sleep 10
-        npx playwright test
-        '''
-    }
-    post {
-        always {
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
-}
         stage('deploy') {
             agent {
                 docker {
