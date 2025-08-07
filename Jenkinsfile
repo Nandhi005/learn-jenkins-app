@@ -25,7 +25,7 @@ pipeline {
             }
         }
         
-        stage('Test') {
+        stage('Unit Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -75,23 +75,23 @@ pipeline {
                 '''
             }
         }
-//         stage('Prod PlaywrightTest') {
-//         agent {
-//         docker {
-//             image 'mcr.microsoft.com/playwright:v1.39.0'
-//             args '-u root:root'
-//             reuseNode true
-//         }
-//     }
-//     environment {
-//         CI_ENVIRONMENT_URL = ''
-//     }
-//     steps {
-//         sh '''
-//         npx playwright test
-//         '''
-//     }
-// }
+          stage('Prod PlaywrightTest') {
+             agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0'
+                    args '-u root:root'
+                    reuseNode true
+                }
+            }
+            environment {
+                CI_ENVIRONMENT_URL = 'https://stellar-sunburst-3f13e2.netlify.app'
+            }
+            steps {
+                sh '''
+                npx playwright test
+                '''
+            }
+}
 }
     post {
         always {
