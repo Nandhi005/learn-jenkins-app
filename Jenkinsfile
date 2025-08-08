@@ -40,8 +40,8 @@ pipeline {
                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                   sh''' 
                   yum update -y
-                  yum install -y ntpdate
-                   ntpdate -u pool.ntp.org
+                  yum install -y chrony
+                  chronyd -q 'server pool.ntp.org iburst'
                    aws --version
                    echo "hello Nandhish" > index.html
                    aws s3 cp index.html s3://$AWS_BUCKET_NAME/index.html
