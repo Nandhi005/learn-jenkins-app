@@ -88,7 +88,7 @@ pipeline {
                                 '''
             }
             script {
-                    env.build-url = sh(script: "node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
+                    env.build_url = sh(script: "node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
                 }
         }
           stage('Deploy PlaywrightTest') {
@@ -100,7 +100,7 @@ pipeline {
                 }
             }
             environment {
-                CI_ENVIRONMENT_URL = "${env.build-url}"
+                CI_ENVIRONMENT_URL = "${env.build_url}"
             }
             steps {
                 sh '''
