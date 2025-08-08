@@ -84,8 +84,40 @@ pipeline {
                 npm install -g netlify-cli@20.0.2 node-jq
                 npx netlify --version 
                 npx netlify status
-                npx netlify deploy --dir=build --json
+                npx netlify deploy --dir=build --json > deploy-output.json
                 '''
+                script {
+                    env.build-url = sh( script: "node-jq -r '.deploy_url' deploy-output.json", returnStdOut: true)
+                }
+            }
+        }
+          stage('Deploy PlaywrightTest') {
+             agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0'
+                    args '-u root:root'
+                    reuseNode true
+                }
+            }
+            environment {
+                CI_ENVIRONMENT_URL = "${env.build-url}"
+            }
+            steps {
+                sh '''
+                npx playwright test
+                '''
+            }
+            post {
+                always {
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'staging Test HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                }
+            }
+}
+        stage('approval') {
+            steps {
+                timeout(2) {
+                    input message: 'Do you wish to deploy to the production ?', ok: 'go Ahead!'
+                }
             }
         }
         stage('deploy') {
