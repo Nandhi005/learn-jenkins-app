@@ -7,6 +7,7 @@ pipeline {
   }
 
     stages {
+        }
         stage('build') {
             agent {
                 docker {
@@ -22,6 +23,22 @@ pipeline {
                 npm run build
                 ls -la
                 '''
+            }
+        }
+        stage('AWS') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    args "--entrypoint=''"
+                    reuseNode true
+              }
+}
+            steps {
+                sh '''
+                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                    aws --version
+                }
+        '''
             }
         }
         stage('TEST') {
@@ -85,8 +102,8 @@ pipeline {
                 npx netlify --version 
                 npx netlify status
                 npx netlify deploy --dir=build --json > deploy-output.json
-                                '''
-                                script {
+                 '''
+                script {
                     env.build_url = sh(script: "node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
                 }
             }
