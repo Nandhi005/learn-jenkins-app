@@ -86,10 +86,11 @@ pipeline {
                 npx netlify status
                 npx netlify deploy --dir=build --json > deploy-output.json
                                 '''
-            }
-            script {
+                                script {
                     env.build_url = sh(script: "node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
                 }
+            }
+            
         }
           stage('Deploy PlaywrightTest') {
              agent {
