@@ -41,7 +41,7 @@ pipeline {
                   sh''' 
                   yum update -y
                   yum install -y chrony
-                  chronyd -q 'server pool.ntp.org iburst'
+                  sudo chronyd -q "server pool.ntp.org iburst
                    aws --version
                    echo "hello Nandhish" > index.html
                    aws s3 cp index.html s3://$AWS_BUCKET_NAME/index.html
