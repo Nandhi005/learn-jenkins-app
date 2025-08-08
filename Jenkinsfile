@@ -84,7 +84,7 @@ pipeline {
                 npm install -g netlify-cli@20.0.2 node-jq
                 npx netlify --version 
                 npx netlify status
-                npx netlify deploy --dir=build --json > deploy.json 
+                npx netlify deploy --dir=build --json
                 '''
             }
         }
