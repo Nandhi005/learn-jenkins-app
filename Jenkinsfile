@@ -33,11 +33,16 @@ pipeline {
                     reuseNode true
               }
 }
+            environment {
+                AWS_BUCKET_NAME= 'my-aws-11082025'
+            }
             steps {
                 
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                   sh''' 
                    aws --version
+                   echo "hello Nandhish" > index.html
+                   aws cp index.html S3://$AWS_BUCKET_NAME/index.html
                    '''
                 }
         
