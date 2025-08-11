@@ -42,7 +42,7 @@ pipeline {
                   yum update -y
                    aws --version
                    echo "hello Nandhish" > index.html
-                   aws s3 cp index.html s3://$AWS_BUCKET_NAME/index.html
+                   aws s3 sync build s3://$AWS_BUCKET_NAME
                    '''
                 }
         
